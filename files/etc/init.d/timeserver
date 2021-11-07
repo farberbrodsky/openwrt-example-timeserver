@@ -1,0 +1,21 @@
+#!/bin/sh /etc/rc.common
+PROG=/usr/bin/timeserver
+
+start_instance() {
+	local cfg="$1"
+	local enabled
+
+	config_get_bool enabled "$cfg" 'enabled' 0
+	[ $enabled -gt 0 ] || return 1
+
+	service_start "$PROG"
+}
+
+start() {
+	config_load 'timeserver'
+	config_foreach start_instance 'timeserver'
+}
+
+stop() {
+	service_stop "$PROG"
+}
